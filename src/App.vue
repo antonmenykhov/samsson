@@ -1,32 +1,52 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
     <router-view/>
   </div>
 </template>
 
+<script>
+import axios from 'axios'
+import constatns from './constants'
+export default {
+  methods: {
+    getData(){
+      axios.get(constatns.contacts).then(response => {
+        this.$store.commit('setContacts', response.data.acf)
+      })
+      axios.get(constatns.news).then(response => {
+        this.$store.commit('setNews', response.data.acf)
+      })
+      axios.get(constatns.portfolio).then(response => {
+        this.$store.commit('setPortfolio', response.data.acf)
+      })
+      axios.get(constatns.about).then(response => {
+        this.$store.commit('setAbout', response.data.acf)
+      })
+      axios.get(constatns.services).then(response => {
+        this.$store.commit('setServices', response.data.acf)
+      })
+    }
+  },
+  created() {
+    this.getData()
+  },
+}
+</script>
+
 <style lang="scss">
+$dark : #126B8F;
+$light: #2EACDA;
+*{
+  box-sizing: border-box;
+  font-family: Roboto, sans-serif;
+}
+body{
+  margin: 0;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  
 }
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
 </style>
