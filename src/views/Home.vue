@@ -80,6 +80,31 @@
             </div>
         </div>
     </section>
+    <section class="razdels">
+        <div class="container">
+            <h2 v-if="lang=='rus'">Разделы инженерных систем</h2>
+            <h2 v-if="lang=='eng'">ENGINEERING SYSTEMS</h2>
+            <div class="razdel-holder">
+                <div class="razdel" v-for="razdel,i in razdels[lang]" :key="i">
+                    <h3>{{razdel.title}}</h3>
+                    <p>{{razdel.description}}</p>
+                    <el-button>Подробнее</el-button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="partners">
+        <div class="container">
+            <h2 v-if="lang=='rus'">Наши партнеры и поставщики</h2>
+            <h2 v-if="lang=='eng'">Our partners and suppliers</h2>
+            <div class="partner-wrapper">
+                <div class="partner" v-for="partner,i in partners" :key="i" :style="'background: url(\''+partner+'\') no-repeat center center / contain'">
+
+                </div>
+            </div>
+        </div>
+
+    </section>
 </div>
 </template>
 
@@ -90,6 +115,58 @@ export default {
     data() {
         return {
             langSwitch: 'RUS',
+            razdels: {
+                eng: [{
+                        title: 'HVAC (HEATING, VENTILATION AIR CONDITIONING)',
+                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
+                    },
+                    {
+                        title: 'TM (THERMAL MECHANICS)',
+                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
+                    },
+                    {
+                        title: 'WS&S (WATER SUPPLY AND SEWERAGE)',
+                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
+                    },
+                    {
+                        title: 'PS (POWER SUPPLY)',
+                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
+                    },
+                    {
+                        title: 'EL (ELECTRIC LIGHTING)',
+                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
+                    },
+                    {
+                        title: 'CN (COMMUNICATION NETWORK)',
+                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
+                    },
+                ],
+                rus: [{
+                        title: 'ОВ (ОТОПЛЕНИЕ И ВЕНТИЛЯЦИЯ)',
+                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
+                    },
+                    {
+                        title: 'ТМ (ТЕПЛОМЕХАНИКА',
+                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
+                    },
+                    {
+                        title: 'ВК (ВОДОСНАБЖЕНИЕ И КАНАЛИЗАЦИЯ)',
+                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
+                    },
+                    {
+                        title: 'ЭМ (ЭЛЕКТРОСНАБЖЕНИЕ)',
+                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
+                    },
+                    {
+                        title: 'ЭО (ЭЛЕКТРООСВЕЩЕНИЕ)',
+                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
+                    },
+                    {
+                        title: 'СС (СЕТИ СВЯЗИ)',
+                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
+                    },
+                ]
+            },
             menu: {
                 eng: [{
                         name: 'About',
@@ -191,6 +268,122 @@ export default {
 $dark : #126B8F;
 $light: #2EACDA;
 
+.razdels {
+    h2 {
+        font-size: 42px;
+        margin-bottom: 0;
+        margin-top: 0;
+        line-height: 1.2;
+        font-weight: 800;
+        letter-spacing: -1px;
+        color: #232323;
+    }
+
+    .container {
+        flex-direction: column;
+        padding: 90px 0;
+    }
+
+    .razdel-holder {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+    .razdel:hover{
+        background: rgb(238, 238, 238);
+    }
+    .razdel {
+        flex: 1 1 300px;
+
+        background: #ffffff;
+        box-shadow: 0 0 5px rgb(0 0 0 / 7%);
+        text-align: left;
+        border-bottom: 3px solid $dark;
+        border-radius: 6px 6px 6px 6px;
+        margin: 15px;
+        padding: 45px 30px 45px 30px;
+        transition: all .2s ease-in-out;
+    
+        p {
+            color: #616161;
+            font-size: 16px;
+            text-overflow: ellipsis;
+
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        h3 {
+            color: #232323;
+            height: 30px;
+            font-size: 18px;
+        }
+
+        .el-button {
+            color: $dark;
+            background-color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 1px solid #e7e7e7;
+            border-radius: 30px 30px 30px 30px;
+            padding: 12px 35px 12px 35px;
+            transition: all .2s ease-in-out;
+        }
+
+        .el-button:hover {
+            background: $dark;
+            color: white;
+        }
+    }
+}
+
+.partners {
+    .container {
+        flex-direction: column;
+        padding: 90px 0;
+    }
+
+    h4 {
+        color: $dark;
+        font-size: 16px;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 15px;
+        letter-spacing: 5px;
+        font-family: Rubik, sans-serif;
+    }
+
+    h2 {
+        font-size: 42px;
+        margin-bottom: 0;
+        margin-top: 0;
+        line-height: 1.2;
+        font-weight: 800;
+        letter-spacing: -1px;
+        color: #232323;
+    }
+}
+
+.partner-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.partner {
+    width: 180px;
+    height: 100px;
+
+    margin: 5px;
+    transition: all .2s;
+}
+
 .methods {
     padding: 90px 0;
     background: #f6f7f9;
@@ -234,24 +427,29 @@ $light: #2EACDA;
         flex: 10 1 300px;
         display: flex;
         flex-wrap: wrap;
+        padding-left: 20px;
     }
-    .method:hover{
-        .number{
+
+    .method:hover {
+        .number {
             transform: scale(1.3);
         }
     }
-    .method{
+
+    .method {
         flex: 1 1 300px;
         margin: 20px;
         font-size: 16px;
-        color: rgb(97,97,97);
+        color: rgb(97, 97, 97);
         font-weight: 400;
         display: flex;
         align-items: center;
-        p{
-            width:80%;
+
+        p {
+            width: 80%;
         }
-        .number{
+
+        .number {
             will-change: transform;
             margin-left: 10px;
             border-radius: 50%;
@@ -268,7 +466,8 @@ $light: #2EACDA;
             margin-right: 30px;
             transition: all .2s;
         }
-        .number::before{
+
+        .number::before {
             content: '';
             position: absolute;
             height: 40px;
@@ -279,9 +478,10 @@ $light: #2EACDA;
             left: -5px;
             top: -5px;
             transition: all .2s ease-in-out;
-            
+
         }
-        .number::after{
+
+        .number::after {
             content: '';
             position: absolute;
             height: 50px;
