@@ -14,10 +14,11 @@ export default {
         this.$store.commit('setContacts', response.data.acf)
       })
       axios.get(constatns.news).then(response => {
-        this.$store.commit('setNews', response.data.acf)
+        this.$store.commit('setNews', response.data)
       })
       axios.get(constatns.portfolio).then(response => {
-        this.$store.commit('setPortfolio', response.data.acf)
+        this.$store.commit('setPortfolio', response.data)
+        
       })
       axios.get(constatns.about).then(response => {
         this.$store.commit('setAbout', response.data.acf)

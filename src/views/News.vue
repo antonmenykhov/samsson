@@ -1,5 +1,5 @@
 <template>
-<div class="services">
+<div class="news">
     <header>
         <div class="container">
             <div class="top-line">
@@ -18,24 +18,39 @@
                 </div>
 
             </div>
-            <h2>Новости</h2>
+            <h2 v-if="lang=='rus'">Новости</h2>
+            <h2 v-if="lang=='eng'" >News</h2>
         </div>
     </header>
     <section>
         <div class="container">
+            <h4 v-if="lang=='rus'">Новости</h4>
+            <h4 v-if="lang=='eng'">News</h4>
+            <h2 v-if="lang=='rus'">Свежие факты</h2>
+            <h2 v-if="lang=='eng'">New facts</h2>
+            <div class="progressbar"></div>
             <ul class="infinite-list" v-infinite-scroll="load" style="overflow:auto">
-                <li v-for="item,i in news" class="infinite-list-item" :key="i">
-                    <div class="image" :style="'background: url(\''+item.img+'\') no-repeat center top / cover'"></div>
+                <li @click="openNew(i-1)" v-for="i in count" class="infinite-list-item" :key="i">
+                    <div class="image" :style="'background: url(\''+news[i-1].img+'\') no-repeat center top / cover'"></div>
                     <div class="text">
                         <div class="meta">
-                            <p> {{item.date}}</p>
+                            <p> {{news[i-1].date}}</p>
                         </div>
-                        <h3>{{item.header}}</h3>
+                        <h3>{{news[i-1].header}}</h3>
                     </div>
                 </li>
+
             </ul>
+            <p class="scroll-msg" v-if="loading">Загружаем новости...</p>
+
         </div>
     </section>
+    <el-dialog width="1100px" :visible.sync="dialog">
+        <div class="image" :style="'background: url(\''+dc.img+'\') no-repeat center center / cover'"></div>
+        <h3>{{dc.header}}</h3>
+        <div class="text" v-html="dc.text"></div>
+        <div class="video" v-html="dc.video"></div>
+    </el-dialog>
 </div>
 </template>
 
@@ -45,16 +60,66 @@ export default {
         lang: function () {
             return this.$store.state.lang
         },
+        noMore() {
+            return this.count >= this.news.length - 1
+        },
     },
     methods: {
+        openNew(i) {
+            const loading = this.$loading({
+                lock: true,
+                text: 'Загрузка',
+                background: 'rgba(255, 255, 255, 0.7)'
+            });
+            this.dc.img = this.news[i].img
+            this.dc.header = this.news[i].header
+            this.dc.text = this.news[i].text
+            this.dc.video = this.news[i].video
+            setTimeout(() => {
+                loading.close();
+                this.dialog = true;
+            }, 500);
+        },
         changeLang() {
             this.$store.commit('setLang', this.langSwitch);
             console.log(this.lang)
 
+        },
+        load() {
+            this.loading = true
+            let razn = (this.news.length - 1) - this.count;
+            setTimeout(() => {
+
+                if (razn >= 3) {
+                    this.count += 3
+                    this.loading = false
+                }
+                if (razn == 2) {
+                    this.count += 2
+                    this.loading = false
+                }
+                if (razn == 1) {
+                    this.count += 1
+                    this.loading = false
+                }
+                if (razn <= 0) {
+
+                    this.loading = false
+                }
+            }, 500)
         }
     },
     data() {
         return {
+            dc: {
+                img: '',
+                header: '',
+                text: '',
+                video: ''
+            },
+            dialog: false,
+            loading: false,
+            count: 6,
             langSwitch: 'RUS',
             menu: {
                 eng: [{
@@ -101,70 +166,90 @@ export default {
                 ]
             },
             news: [{
-                    img: '/img/main.png',
+                    img: '/img/211.jpg',
                     category: 'Категория',
                     date: 'Май 31, 2021',
-                    header: 'Это тестовая новость для примера'
+                    header: 'Это тестовая новость для примера 1',
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim augue libero, nec tempor tortor sodales id. Mauris sit amet lacus quis risus facilisis convallis sed quis orci. Integer rhoncus nunc aliquam iaculis vehicula. Phasellus euismod condimentum nisi vel dignissim. Sed non rutrum sem. Curabitur condimentum diam ullamcorper volutpat euismod. Maecenas ut feugiat tortor. Vivamus vel lectus urna. Aliquam erat volutpat. Curabitur tempus odio vitae condimentum eleifend. Curabitur rutrum diam non massa fringilla, ac porta libero fermentum. Sed non tortor posuere, congue dui id, dapibus augue. Vestibulum urna lacus, pretium a vestibulum at, varius sit amet sapien. Integer dictum dignissim enim ac lobortis. Curabitur gravida maximus laoreet.',
+                    
+                    video: '<iframe width="560" height="315" src="https://www.youtube.com/embed/XqMe7zUzLuI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
                 },
                 {
-                    img: '/img/main.png',
+                    img: '/img/211.jpg',
                     category: 'Категория',
                     date: 'Май 31, 2021',
-                    header: 'Это тестовая новость для примера'
+                    header: 'Это тестовая новость для примера',
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim augue libero, nec tempor tortor sodales id. Mauris sit amet lacus quis risus facilisis convallis sed quis orci. Integer rhoncus nunc aliquam iaculis vehicula. Phasellus euismod condimentum nisi vel dignissim. Sed non rutrum sem. Curabitur condimentum diam ullamcorper volutpat euismod. Maecenas ut feugiat tortor. Vivamus vel lectus urna. Aliquam erat volutpat. Curabitur tempus odio vitae condimentum eleifend. Curabitur rutrum diam non massa fringilla, ac porta libero fermentum. Sed non tortor posuere, congue dui id, dapibus augue. Vestibulum urna lacus, pretium a vestibulum at, varius sit amet sapien. Integer dictum dignissim enim ac lobortis. Curabitur gravida maximus laoreet.'
                 },
                 {
-                    img: '/img/main.png',
+                    img: '/img/211.jpg',
                     category: 'Категория',
                     date: 'Май 31, 2021',
-                    header: 'Это тестовая новость для примера'
+                    header: 'Это тестовая новость для примера',
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim augue libero, nec tempor tortor sodales id. Mauris sit amet lacus quis risus facilisis convallis sed quis orci. Integer rhoncus nunc aliquam iaculis vehicula. Phasellus euismod condimentum nisi vel dignissim. Sed non rutrum sem. Curabitur condimentum diam ullamcorper volutpat euismod. Maecenas ut feugiat tortor. Vivamus vel lectus urna. Aliquam erat volutpat. Curabitur tempus odio vitae condimentum eleifend. Curabitur rutrum diam non massa fringilla, ac porta libero fermentum. Sed non tortor posuere, congue dui id, dapibus augue. Vestibulum urna lacus, pretium a vestibulum at, varius sit amet sapien. Integer dictum dignissim enim ac lobortis. Curabitur gravida maximus laoreet.'
                 },
                 {
-                    img: '/img/main.png',
+                    img: '/img/211.jpg',
                     category: 'Категория',
                     date: 'Май 31, 2021',
-                    header: 'Это тестовая новость для примера'
+                    header: 'Это тестовая новость для примера',
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim augue libero, nec tempor tortor sodales id. Mauris sit amet lacus quis risus facilisis convallis sed quis orci. Integer rhoncus nunc aliquam iaculis vehicula. Phasellus euismod condimentum nisi vel dignissim. Sed non rutrum sem. Curabitur condimentum diam ullamcorper volutpat euismod. Maecenas ut feugiat tortor. Vivamus vel lectus urna. Aliquam erat volutpat. Curabitur tempus odio vitae condimentum eleifend. Curabitur rutrum diam non massa fringilla, ac porta libero fermentum. Sed non tortor posuere, congue dui id, dapibus augue. Vestibulum urna lacus, pretium a vestibulum at, varius sit amet sapien. Integer dictum dignissim enim ac lobortis. Curabitur gravida maximus laoreet.'
                 },
                 {
-                    img: '/img/main.png',
+                    img: '/img/211.jpg',
                     category: 'Категория',
                     date: 'Май 31, 2021',
-                    header: 'Это тестовая новость для примера'
+                    header: 'Это тестовая новость для примера',
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim augue libero, nec tempor tortor sodales id. Mauris sit amet lacus quis risus facilisis convallis sed quis orci. Integer rhoncus nunc aliquam iaculis vehicula. Phasellus euismod condimentum nisi vel dignissim. Sed non rutrum sem. Curabitur condimentum diam ullamcorper volutpat euismod. Maecenas ut feugiat tortor. Vivamus vel lectus urna. Aliquam erat volutpat. Curabitur tempus odio vitae condimentum eleifend. Curabitur rutrum diam non massa fringilla, ac porta libero fermentum. Sed non tortor posuere, congue dui id, dapibus augue. Vestibulum urna lacus, pretium a vestibulum at, varius sit amet sapien. Integer dictum dignissim enim ac lobortis. Curabitur gravida maximus laoreet.'
                 },
                 {
-                    img: '/img/main.png',
+                    img: '/img/211.jpg',
                     category: 'Категория',
                     date: 'Май 31, 2021',
-                    header: 'Это тестовая новость для примера'
+                    header: 'Это тестовая новость для примера',
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim augue libero, nec tempor tortor sodales id. Mauris sit amet lacus quis risus facilisis convallis sed quis orci. Integer rhoncus nunc aliquam iaculis vehicula. Phasellus euismod condimentum nisi vel dignissim. Sed non rutrum sem. Curabitur condimentum diam ullamcorper volutpat euismod. Maecenas ut feugiat tortor. Vivamus vel lectus urna. Aliquam erat volutpat. Curabitur tempus odio vitae condimentum eleifend. Curabitur rutrum diam non massa fringilla, ac porta libero fermentum. Sed non tortor posuere, congue dui id, dapibus augue. Vestibulum urna lacus, pretium a vestibulum at, varius sit amet sapien. Integer dictum dignissim enim ac lobortis. Curabitur gravida maximus laoreet.'
                 },
                 {
-                    img: '/img/main.png',
+                    img: '/img/211.jpg',
                     category: 'Категория',
                     date: 'Май 31, 2021',
-                    header: 'Это тестовая новость для примера'
+                    header: 'Это тестовая новость для примера',
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim augue libero, nec tempor tortor sodales id. Mauris sit amet lacus quis risus facilisis convallis sed quis orci. Integer rhoncus nunc aliquam iaculis vehicula. Phasellus euismod condimentum nisi vel dignissim. Sed non rutrum sem. Curabitur condimentum diam ullamcorper volutpat euismod. Maecenas ut feugiat tortor. Vivamus vel lectus urna. Aliquam erat volutpat. Curabitur tempus odio vitae condimentum eleifend. Curabitur rutrum diam non massa fringilla, ac porta libero fermentum. Sed non tortor posuere, congue dui id, dapibus augue. Vestibulum urna lacus, pretium a vestibulum at, varius sit amet sapien. Integer dictum dignissim enim ac lobortis. Curabitur gravida maximus laoreet.'
                 },
                 {
-                    img: '/img/main.png',
+                    img: '/img/211.jpg',
                     category: 'Категория',
                     date: 'Май 31, 2021',
-                    header: 'Это тестовая новость для примера'
+                    header: 'Это тестовая новость для примера',
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim augue libero, nec tempor tortor sodales id. Mauris sit amet lacus quis risus facilisis convallis sed quis orci. Integer rhoncus nunc aliquam iaculis vehicula. Phasellus euismod condimentum nisi vel dignissim. Sed non rutrum sem. Curabitur condimentum diam ullamcorper volutpat euismod. Maecenas ut feugiat tortor. Vivamus vel lectus urna. Aliquam erat volutpat. Curabitur tempus odio vitae condimentum eleifend. Curabitur rutrum diam non massa fringilla, ac porta libero fermentum. Sed non tortor posuere, congue dui id, dapibus augue. Vestibulum urna lacus, pretium a vestibulum at, varius sit amet sapien. Integer dictum dignissim enim ac lobortis. Curabitur gravida maximus laoreet.'
                 },
                 {
-                    img: '/img/main.png',
+                    img: '/img/211.jpg',
                     category: 'Категория',
                     date: 'Май 31, 2021',
-                    header: 'Это тестовая новость для примера'
+                    header: 'Это тестовая новость для примера',
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim augue libero, nec tempor tortor sodales id. Mauris sit amet lacus quis risus facilisis convallis sed quis orci. Integer rhoncus nunc aliquam iaculis vehicula. Phasellus euismod condimentum nisi vel dignissim. Sed non rutrum sem. Curabitur condimentum diam ullamcorper volutpat euismod. Maecenas ut feugiat tortor. Vivamus vel lectus urna. Aliquam erat volutpat. Curabitur tempus odio vitae condimentum eleifend. Curabitur rutrum diam non massa fringilla, ac porta libero fermentum. Sed non tortor posuere, congue dui id, dapibus augue. Vestibulum urna lacus, pretium a vestibulum at, varius sit amet sapien. Integer dictum dignissim enim ac lobortis. Curabitur gravida maximus laoreet.'
                 },
                 {
-                    img: '/img/main.png',
+                    img: '/img/211.jpg',
                     category: 'Категория',
                     date: 'Май 31, 2021',
-                    header: 'Это тестовая новость для примера'
+                    header: 'Это тестовая новость для примера',
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim augue libero, nec tempor tortor sodales id. Mauris sit amet lacus quis risus facilisis convallis sed quis orci. Integer rhoncus nunc aliquam iaculis vehicula. Phasellus euismod condimentum nisi vel dignissim. Sed non rutrum sem. Curabitur condimentum diam ullamcorper volutpat euismod. Maecenas ut feugiat tortor. Vivamus vel lectus urna. Aliquam erat volutpat. Curabitur tempus odio vitae condimentum eleifend. Curabitur rutrum diam non massa fringilla, ac porta libero fermentum. Sed non tortor posuere, congue dui id, dapibus augue. Vestibulum urna lacus, pretium a vestibulum at, varius sit amet sapien. Integer dictum dignissim enim ac lobortis. Curabitur gravida maximus laoreet.'
                 },
                 {
-                    img: '/img/main.png',
+                    img: '/img/211.jpg',
                     category: 'Категория',
                     date: 'Май 31, 2021',
-                    header: 'Это тестовая новость для примера'
+                    header: 'Это тестовая новость для примера',
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim augue libero, nec tempor tortor sodales id. Mauris sit amet lacus quis risus facilisis convallis sed quis orci. Integer rhoncus nunc aliquam iaculis vehicula. Phasellus euismod condimentum nisi vel dignissim. Sed non rutrum sem. Curabitur condimentum diam ullamcorper volutpat euismod. Maecenas ut feugiat tortor. Vivamus vel lectus urna. Aliquam erat volutpat. Curabitur tempus odio vitae condimentum eleifend. Curabitur rutrum diam non massa fringilla, ac porta libero fermentum. Sed non tortor posuere, congue dui id, dapibus augue. Vestibulum urna lacus, pretium a vestibulum at, varius sit amet sapien. Integer dictum dignissim enim ac lobortis. Curabitur gravida maximus laoreet.'
+                },
+                {
+                    img: '/img/211.jpg',
+                    category: 'Категория',
+                    date: 'Май 31, 2021',
+                    header: 'Это тестовая новость для примера',
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim augue libero, nec tempor tortor sodales id. Mauris sit amet lacus quis risus facilisis convallis sed quis orci. Integer rhoncus nunc aliquam iaculis vehicula. Phasellus euismod condimentum nisi vel dignissim. Sed non rutrum sem. Curabitur condimentum diam ullamcorper volutpat euismod. Maecenas ut feugiat tortor. Vivamus vel lectus urna. Aliquam erat volutpat. Curabitur tempus odio vitae condimentum eleifend. Curabitur rutrum diam non massa fringilla, ac porta libero fermentum. Sed non tortor posuere, congue dui id, dapibus augue. Vestibulum urna lacus, pretium a vestibulum at, varius sit amet sapien. Integer dictum dignissim enim ac lobortis. Curabitur gravida maximus laoreet.'
                 },
             ]
         }
@@ -173,9 +258,65 @@ export default {
 </script>
 
 <style lang="scss">
-.services {
+.el-dialog {
+    h3 {
+        font-size: 30px;
+        color: #126B8F;
+        width: 100%;
+        text-align: center;
+    }
+
+    .image {
+        width: 100%;
+        height: 500px;
+    }
+    .text{
+        font-size: 16px;
+    }
+    iframe{
+        width: 100%!important;
+        height: 400px;
+        margin-top: 20px;
+    }
+}
+
+.scroll-msg {
+    font-family: Rubik;
+    color: #126B8F;
+    text-transform: uppercase;
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+}
+
+.news {
+    section{
+        .container{
+            flex-direction: column;
+            h4 {
+            color: #126B8F;
+            font-size: 16px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-family: Rubik;
+            letter-spacing: 5px;
+        }
+
+        h2 {
+            font-size: 42px;
+            margin-bottom: 0;
+            text-transform: capitalize;
+            margin-top: 0;
+            line-height: 1.2;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #232323;
+        }
+        }
+    }
     header {
-        background: url('/img/main.png') no-repeat center top /cover;
+        background: url('/img/211.jpg') no-repeat center top /cover;
         height: 40vh;
 
         h2 {
@@ -183,11 +324,27 @@ export default {
             font-size: 42px;
             margin-top: 100px;
         }
+
+        position: relative;
+    }
+
+    header::before {
+        content: '';
+        background: rgba(0, 0, 0, 0.322);
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        z-index: 1;
+    }
+
+    header .container {
+        z-index: 2;
+        position: relative;
     }
 
     section {
         background: #f6f6f6;
-        padding: 90px 0;
+        padding: 50px 0;
     }
 
     .infinite-list {
@@ -204,6 +361,7 @@ export default {
     }
 
     .infinite-list-item {
+        max-width: calc(33% - 30px);
         cursor: pointer;
         flex: 1 1 300px;
         margin: 15px;
@@ -244,7 +402,8 @@ export default {
             color: #232323;
             transition: all .2s ease-in-out;
         }
-        h3:hover{
+
+        h3:hover {
             color: #126B8F;
         }
     }
