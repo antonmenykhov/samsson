@@ -2,22 +2,7 @@
 <div class="news">
     <header>
         <div class="container">
-            <div class="top-line">
-                <div class="logo">
-                    <div class="logo-img"></div>
-                    <div class="logo-text">{{$store.state.name[lang].name}}</div>
-                </div>
-                <div class="menu">
-                    <div class="menu-item" v-for="item,i in menu[lang]" :key="i">
-                        {{item.name}}
-                    </div>
-                    <div @click="changeLang" class="lang-switcher">
-                        <el-switch v-model="langSwitch" inactive-text="RUS" active-text="ENG" active-value="eng" inactive-value="rus" active-color="#126B8F" inactive-color="#2EACDA">
-                            ></el-switch>
-                    </div>
-                </div>
-
-            </div>
+           
             <h2 v-if="lang=='rus'">Новости</h2>
             <h2 v-if="lang=='eng'" >News</h2>
         </div>
@@ -57,7 +42,7 @@
 <script>
 export default {
     computed: {
-        lang: function () {
+         lang: function () {
             return this.$store.state.lang
         },
         noMore() {
@@ -67,7 +52,7 @@ export default {
     methods: {
         openNew(i) {
             const loading = this.$loading({
-                lock: true,
+                
                 text: 'Загрузка',
                 background: 'rgba(255, 255, 255, 0.7)'
             });
@@ -80,11 +65,7 @@ export default {
                 this.dialog = true;
             }, 500);
         },
-        changeLang() {
-            this.$store.commit('setLang', this.langSwitch);
-            console.log(this.lang)
-
-        },
+       
         load() {
             this.loading = true
             let razn = (this.news.length - 1) - this.count;
@@ -120,51 +101,7 @@ export default {
             dialog: false,
             loading: false,
             count: 6,
-            langSwitch: 'RUS',
-            menu: {
-                eng: [{
-                        name: 'About',
-                        link: ''
-                    },
-                    {
-                        name: 'Services',
-                        link: ''
-                    },
-                    {
-                        name: 'Portfolio',
-                        link: ''
-                    },
-                    {
-                        name: 'News',
-                        link: ''
-                    },
-                    {
-                        name: 'Contacts',
-                        link: ''
-                    },
-                ],
-                rus: [{
-                        name: 'О компании',
-                        link: ''
-                    },
-                    {
-                        name: 'Услуги',
-                        link: ''
-                    },
-                    {
-                        name: 'Портфолио',
-                        link: ''
-                    },
-                    {
-                        name: 'Новости',
-                        link: ''
-                    },
-                    {
-                        name: 'Контакты',
-                        link: ''
-                    },
-                ]
-            },
+            
             news: [{
                     img: '/img/211.jpg',
                     category: 'Категория',
@@ -172,7 +109,7 @@ export default {
                     header: 'Это тестовая новость для примера 1',
                     text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim augue libero, nec tempor tortor sodales id. Mauris sit amet lacus quis risus facilisis convallis sed quis orci. Integer rhoncus nunc aliquam iaculis vehicula. Phasellus euismod condimentum nisi vel dignissim. Sed non rutrum sem. Curabitur condimentum diam ullamcorper volutpat euismod. Maecenas ut feugiat tortor. Vivamus vel lectus urna. Aliquam erat volutpat. Curabitur tempus odio vitae condimentum eleifend. Curabitur rutrum diam non massa fringilla, ac porta libero fermentum. Sed non tortor posuere, congue dui id, dapibus augue. Vestibulum urna lacus, pretium a vestibulum at, varius sit amet sapien. Integer dictum dignissim enim ac lobortis. Curabitur gravida maximus laoreet.',
                     
-                    video: '<iframe width="560" height="315" src="https://www.youtube.com/embed/XqMe7zUzLuI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+                    video: '<iframe width="560" height="315" src="https://www.youtube.com/embed/lyh2kAjcmSY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
                 },
                 {
                     img: '/img/211.jpg',
@@ -322,7 +259,7 @@ export default {
         h2 {
             color: white;
             font-size: 42px;
-            margin-top: 100px;
+            margin-top: 150px;
         }
 
         position: relative;

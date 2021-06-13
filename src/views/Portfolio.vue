@@ -2,22 +2,7 @@
 <div class="portfolio">
     <header>
         <div class="container">
-            <div class="top-line">
-                <div class="logo">
-                    <div class="logo-img"></div>
-                    <div class="logo-text">{{$store.state.name[lang].name}}</div>
-                </div>
-                <div class="menu">
-                    <div class="menu-item" v-for="item,i in menu[lang]" :key="i">
-                        {{item.name}}
-                    </div>
-                    <div @click="changeLang" class="lang-switcher">
-                        <el-switch v-model="langSwitch" inactive-text="RUS" active-text="ENG" active-value="eng" inactive-value="rus" active-color="#126B8F" inactive-color="#2EACDA">
-                            ></el-switch>
-                    </div>
-                </div>
-
-            </div>
+            
             <h2 v-if="lang=='rus'">Портфолио</h2>
             <h2 v-if="lang=='eng'">Portfolio</h2>
         </div>
@@ -55,7 +40,14 @@
                 <p v-html="dc.text"></p>
             </div>
             <div class="gallery">
-                
+                <h3  v-if="dc.gallery[0]">Галерея</h3>
+                <el-carousel v-if="dc.gallery[0]" arrow="always" :autoplay="false" indicator-position="none" height="600px" ref="top" v-touch:swipe="swipe">
+                    <el-carousel-item :style="'background: url(\''+item.img+'\') no-repeat center top / cover'" v-for="item,i in dc.gallery" :key="i">
+                        <div class="sign">{{item.sign[lang]}}</div>
+                    </el-carousel-item>
+
+                </el-carousel>
+
             </div>
         </div>
     </el-dialog>
@@ -63,20 +55,23 @@
 </template>
 
 <script>
-
 export default {
-    mounted() {
-        
-    },
-    methods: {
-        changeLang() {
-            this.$store.commit('setLang', this.langSwitch);
-            console.log(this.lang)
 
+    methods: {
+        swipe(direct) {
+            const top = this.$refs['top'];
+            if (direct == 'right') {
+                top.prev()
+            }
+            if (direct == 'left') {
+                top.next()
+            }
         },
+
+        
         openNew(i) {
             const loading = this.$loading({
-                lock: true,
+                
                 text: 'Загрузка',
                 background: 'rgba(255, 255, 255, 0.7)'
             });
@@ -114,69 +109,28 @@ export default {
         }
     },
     computed: {
-        lang: function () {
+         lang: function () {
             return this.$store.state.lang
         },
+        
         portfolio: function () {
             return this.$store.state.portfolio
         },
+
     },
     data() {
         return {
+
             loading: false,
             dialog: false,
             dc: {
                 img: null,
                 name: null,
                 text: null,
-                gallery: null,
+                gallery: [],
             },
             count: 3,
-            langSwitch: 'RUS',
-            menu: {
-                eng: [{
-                        name: 'About',
-                        link: ''
-                    },
-                    {
-                        name: 'Services',
-                        link: ''
-                    },
-                    {
-                        name: 'Portfolio',
-                        link: ''
-                    },
-                    {
-                        name: 'News',
-                        link: ''
-                    },
-                    {
-                        name: 'Contacts',
-                        link: ''
-                    },
-                ],
-                rus: [{
-                        name: 'О компании',
-                        link: ''
-                    },
-                    {
-                        name: 'Услуги',
-                        link: ''
-                    },
-                    {
-                        name: 'Портфолио',
-                        link: ''
-                    },
-                    {
-                        name: 'Новости',
-                        link: ''
-                    },
-                    {
-                        name: 'Контакты',
-                        link: ''
-                    },
-                ]
-            },
+            
         }
     },
 }
@@ -191,10 +145,42 @@ export default {
         align-items: center;
         width: 100%;
 
+        .gallery {
+            flex: 1 1 600px;
+            height: auto;
+            
+            h3 {
+                margin: 10px 0;
+                padding: 10px;
+                color: white;
+                text-align: center;
+                word-break: keep-all;
+                font-size: 24px;
+               
+                background: #126B8F;
+            }
+            .el-carousel__item{
+                
+                .sign{
+                    position: absolute;
+                    bottom: 10px;
+                    left: 10px;
+                    right: 10px;
+                    border-radius: 5px;
+                    text-align: center;
+                    background: rgba(0, 0, 0, 0.522);
+                    color: white;
+                    font-size: 20px;
+                    padding: 10px 0;
+                }
+            }
+        }
+
         .image {
             flex: 1 1 300px;
             min-height: 350px;
             border-radius: 5px 0 0 0;
+            height: auto;
         }
 
         .text {
@@ -314,7 +300,7 @@ export default {
         h2 {
             color: white;
             font-size: 42px;
-            margin-top: 100px;
+            margin-top: 150px;
         }
 
         position: relative;

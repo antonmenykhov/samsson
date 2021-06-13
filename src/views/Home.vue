@@ -1,32 +1,20 @@
 <template>
 <div v-if="about" class="home">
-    <section class="header">
-        <div class="container">
-            <div class="top-line">
-                <div class="logo">
-                    <div class="logo-img"></div>
-                    <div class="logo-text">{{$store.state.name[lang].name}}</div>
-                </div>
-                <div class="menu">
-                    <div class="menu-item" v-for="item,i in menu[lang]" :key="i">
-                        {{item.name}}
-                    </div>
-                    <div @click="changeLang" class="lang-switcher">
-                        <el-switch v-model="langSwitch" inactive-text="RUS" active-text="ENG" active-value="eng" inactive-value="rus" active-color="#126B8F" inactive-color="#2EACDA">
-                            ></el-switch>
-                    </div>
-                </div>
+    <header class="main-header">
+        <iframe class="frame-top" src="/main.html" scrolling="no" frameborder="0"></iframe>
+        <div class="header">
+            <div class="container">
 
-            </div>
-            <div class="main-line">
-                <div class="logo">
+                <div class="main-line">
+                    <div class="logo">
 
+                    </div>
+                    <h1>{{$store.state.name[lang].name}}</h1>
+                    <p>{{$store.state.name[lang].dev}}</p>
                 </div>
-                <h1>{{$store.state.name[lang].name}}</h1>
-                <p>{{$store.state.name[lang].dev}}</p>
             </div>
         </div>
-    </section>
+    </header>
     <section class="targets">
         <h2 v-if="lang=='rus'">Наши цели</h2>
         <h2 v-if="lang=='eng'">Our mission</h2>
@@ -93,6 +81,16 @@
             </div>
         </div>
     </section>
+    <section id="numbers" ref="numbers" class="numbers" @click="getNums">
+        <div class="container">
+            <div class="number-wrapper" v-for="number,i in numbers" :key="i">
+                <div class="number-name">{{number.name[lang]}}</div>
+                <div v-if="i==0" class="number">{{animatedNumber1}} <span>{{number.ed[lang]}}</span></div>
+                <div v-if="i==1" class="number">{{animatedNumber2}} <span>{{number.ed[lang]}}</span></div>
+                <div v-if="i==2" class="number">{{animatedNumber3}} <span>{{number.ed[lang]}}</span></div>
+            </div>
+        </div>
+    </section>
     <section class="partners">
         <div class="container">
             <h2 v-if="lang=='rus'">Наши партнеры и поставщики</h2>
@@ -103,18 +101,69 @@
                 </div>
             </div>
         </div>
-
     </section>
+    <section @click="getNums" class="maps">
+        <div class="container">
+            <h2 v-if="lang=='rus'">География проектов</h2>
+            <h2 v-if="lang=='eng'">Projects on map</h2>
+            <div class="map">
+                <div v-for="marker,i in geo" :key="i" class="map-marker" :style="'left:'+marker.cords.x+'%; top:'+marker.cords.y+'%'">
+
+                    <el-tooltip v-if="marker.name.rus!='Тюмень'" class="item" effect="dark" :content="marker.name[lang]" placement="top">
+                        <span class="material-icons dot"> location_on </span>
+                    </el-tooltip>
+                    <el-tooltip v-if="marker.name.rus=='Тюмень'" class="item" effect="dark" placement="top">
+                        <div v-if="lang=='rus'" slot="content">
+                            <h5>Тюмень</h5>
+                            <h6>Центральный офис</h6>
+                            <p>Адрес: {{contacts.adres[lang]}}</p>
+                            <p>Телефон: {{contacts.phone}}</p>
+                            <p>Почта: {{contacts.mail}}</p>
+                        </div>
+                        <div v-if="lang=='eng'" slot="content">
+                            <h5>Tyumen</h5>
+                            <h6>Central office</h6>
+                            <p>Adress: {{contacts.adres[lang]}}</p>
+                            <p>Phone: {{contacts.phone}}</p>
+                            <p>Mail: {{contacts.mail}}</p>
+                        </div>
+                        <span class="material-icons yellow"> location_on </span>
+                    </el-tooltip>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </div>
 </template>
 
 <script>
+import gsap from 'gsap'
 export default {
 
+    watch: {
+
+        num1: function (newValue) {
+            gsap.to(this.$data, { duration: 2, tweenedNumber1: newValue });
+        },
+        num2: function (newValue) {
+            gsap.to(this.$data, { duration: 2, tweenedNumber2: newValue });
+        },
+        num3: function (newValue) {
+            gsap.to(this.$data, { duration: 2, tweenedNumber3: newValue });
+        }
+    },
     name: 'Home',
     data() {
         return {
-            langSwitch: 'RUS',
+
+            num: [0, 0, 0],
+            num1: 0,
+            num2: 0,
+            num3: 0,
+            tweenedNumber1: 0,
+            tweenedNumber2: 0,
+            tweenedNumber3: 0,
             razdels: {
                 eng: [{
                         title: 'HVAC (HEATING, VENTILATION AIR CONDITIONING)',
@@ -167,63 +216,58 @@ export default {
                     },
                 ]
             },
-            menu: {
-                eng: [{
-                        name: 'About',
-                        link: ''
-                    },
-                    {
-                        name: 'Services',
-                        link: ''
-                    },
-                    {
-                        name: 'Portfolio',
-                        link: ''
-                    },
-                    {
-                        name: 'News',
-                        link: ''
-                    },
-                    {
-                        name: 'Contacts',
-                        link: ''
-                    },
-                ],
-                rus: [{
-                        name: 'О компании',
-                        link: ''
-                    },
-                    {
-                        name: 'Услуги',
-                        link: ''
-                    },
-                    {
-                        name: 'Портфолио',
-                        link: ''
-                    },
-                    {
-                        name: 'Новости',
-                        link: ''
-                    },
-                    {
-                        name: 'Контакты',
-                        link: ''
-                    },
-                ]
-            },
 
         }
     },
+
     methods: {
-        changeLang() {
-            this.$store.commit('setLang', this.langSwitch);
-            console.log(this.lang)
+        getNums() {
+            let rect = null;
+            rect = document.getElementById('numbers').getBoundingClientRect();
+            if (rect.top - window.innerHeight < 100) {
+                window.removeEventListener('scroll', this.getNums)
+                for (let i = 0; i < this.numbers.length; i++) {
+                    let date = new Date(this.numbers[i].date);
+                    let currentDate = new Date();
+                    let dateS = date.getTime();
+                    let currentDateS = currentDate.getTime();
+                    let hours = Math.ceil((currentDateS - dateS) / 3600000);
+                    this.num[i] = this.numbers[i].start * 1 + hours * this.numbers[i].delta;
+                }
+                this.num1 = this.num[0]
+                this.num2 = this.num[1]
+                this.num3 = this.num[2]
 
+            }
         }
+
     },
 
+    mounted() {
+
+        setTimeout(() => {
+
+            window.addEventListener('scroll',
+
+                this.getNums, )
+
+        }, 1000)
+
+    },
     computed: {
+
+        animatedNumber1: function () {
+
+            return this.tweenedNumber1.toFixed(0);
+        },
+        animatedNumber2: function () {
+            return this.tweenedNumber2.toFixed(0);
+        },
+        animatedNumber3: function () {
+            return this.tweenedNumber3.toFixed(0);
+        },
         about: function () {
+            this.getNums
             return this.$store.state.about
         },
         lang: function () {
@@ -237,6 +281,9 @@ export default {
         },
         partners: function () {
             return this.about.partners
+        },
+        numbers: function () {
+            return this.about.numbers
         },
         facts: function () {
             let facts = {};
@@ -268,6 +315,132 @@ export default {
 $dark : #126B8F;
 $light: #2EACDA;
 
+.numbers {
+    background: #F6F7F9;
+    display: flex;
+    
+    padding: 30px;
+    .container{
+        width: 100%;
+        justify-content: center;
+        align-items: stretch;
+    }
+    .number-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        flex: 1 1 300px;
+        margin: 10px;
+        ;
+    }
+    .number-name{
+        text-align: center;
+        font-size: 20px;
+        color: #232323;
+        
+    }
+    .number{
+        color: $dark;
+        font-size: 30px;
+        margin-top: 20px;
+        font-weight: 500;
+    }
+}
+
+.el-tooltip__popper.is-dark {
+
+    background: white !important;
+    color: #232323 !important;
+    font-size: 18px;
+    text-transform: uppercase;
+
+    h5 {
+        margin: 5px 0;
+        font-size: 18px;
+        text-transform: uppercase;
+        color: #232323 !important;
+        font-weight: 400;
+    }
+
+    h6 {
+        font-size: 16px !important;
+        color: #616161 !important;
+        text-transform: capitalize !important;
+        margin: 0 0 5px 0;
+        font-weight: 400;
+    }
+
+    p {
+        font-size: 16px !important;
+        color: #232323 !important;
+        text-transform: capitalize !important;
+        margin: 0;
+        font-weight: 400;
+    }
+
+}
+
+.popper__arrow {
+    background: white !important;
+    color: white !important
+}
+
+.maps {
+    padding: 90px;
+
+    .yellow {
+        color: rgb(245, 10, 10) !important;
+        font-size: 35px;
+    }
+
+    .map-marker {
+        position: absolute;
+        cursor: pointer;
+
+        .dot {
+            font-size: 30px;
+            color: black;
+        }
+    }
+
+    .container {
+        flex-direction: column;
+
+    }
+
+    h2 {
+        font-size: 42px;
+        margin-bottom: 0;
+        margin-top: 0;
+        line-height: 1.2;
+        font-weight: 800;
+        letter-spacing: -1px;
+        color: #232323;
+    }
+}
+
+.map {
+    background: url('/img/map.png') no-repeat center center / contain;
+    height: 40vw;
+    width: 80vw;
+    max-width: 1200px;
+    max-height: 600px;
+    position: relative;
+}
+
+.frame-top {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+
+}
+
 .razdels {
     h2 {
         font-size: 42px;
@@ -290,9 +463,11 @@ $light: #2EACDA;
         justify-content: center;
         align-items: center;
     }
-    .razdel:hover{
+
+    .razdel:hover {
         background: rgb(238, 238, 238);
     }
+
     .razdel {
         flex: 1 1 300px;
 
@@ -304,7 +479,7 @@ $light: #2EACDA;
         margin: 15px;
         padding: 45px 30px 45px 30px;
         transition: all .2s ease-in-out;
-    
+
         p {
             color: #616161;
             font-size: 16px;
@@ -374,14 +549,20 @@ $light: #2EACDA;
     justify-content: center;
     align-items: center;
     width: 100%;
+
 }
 
 .partner {
     width: 180px;
     height: 100px;
-
+    filter: grayscale(100);
+    transition: all .2s;
     margin: 5px;
     transition: all .2s;
+}
+
+.partner:hover {
+    filter: grayscale(0);
 }
 
 .methods {
@@ -496,6 +677,10 @@ $light: #2EACDA;
     }
 }
 
+h4 {
+    font-family: Rubik;
+}
+
 .about-holder {
     display: flex;
     flex-wrap: wrap;
@@ -505,6 +690,8 @@ $light: #2EACDA;
 
     .image {
         flex: 1 1 300px;
+        background: url('/img/about-2.png') no-repeat center center / contain;
+        height: 500px;
     }
 
     .text {
@@ -587,10 +774,30 @@ $light: #2EACDA;
     }
 }
 
-.header {
-    background: url('/img/main.png') no-repeat center center / cover;
+.main-header {
+    position: relative;
     height: 100vh;
-    z-index: -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    width: 100%;
+    overflow: hidden;
+}
+
+.main-header::after {
+    content: '';
+    background: url('/img/main.png') no-repeat center center / cover;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 150px;
+}
+
+.header {
+
+    z-index: 2;
 
 }
 
@@ -602,7 +809,7 @@ $light: #2EACDA;
     align-items: center;
 
     .logo {
-        margin-top: 150px;
+        margin-top: -100px;
         background: url('/img/logo.png') no-repeat center center / contain;
         height: 200px;
         width: 200px;
@@ -656,6 +863,7 @@ $light: #2EACDA;
         margin: 5px 10px;
         color: white;
         font-size: 18px;
+        cursor: pointer;
     }
 
     .lang-switcher {
@@ -683,6 +891,7 @@ $light: #2EACDA;
 }
 
 .targets {
+    position: relative;
     margin-top: -250px;
     z-index: 2;
 
