@@ -2,7 +2,7 @@
 <div class="news">
     <header>
         <div class="container">
-           
+           <iframe class="frame-top" src="/main.html" scrolling="no" frameborder="0"></iframe>
             <h2 v-if="lang=='rus'">Новости</h2>
             <h2 v-if="lang=='eng'" >News</h2>
         </div>
@@ -252,32 +252,10 @@ export default {
         }
         }
     }
-    header {
-        background: url('/img/211.jpg') no-repeat center top /cover;
-        height: 40vh;
+    
+    
 
-        h2 {
-            color: white;
-            font-size: 42px;
-            margin-top: 150px;
-        }
-
-        position: relative;
-    }
-
-    header::before {
-        content: '';
-        background: rgba(0, 0, 0, 0.322);
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        z-index: 1;
-    }
-
-    header .container {
-        z-index: 2;
-        position: relative;
-    }
+   
 
     section {
         background: #f6f6f6;

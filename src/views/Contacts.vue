@@ -1,6 +1,7 @@
 <template>
 <div class="contacts">
     <header>
+        <iframe class="frame-top" src="/main.html" scrolling="no" frameborder="0"></iframe>
         <div class="container">
             <h2 v-if="lang=='rus'">Контакты</h2>
             <h2 v-if="lang=='eng'">Contacts</h2>
@@ -260,30 +261,7 @@ $light: #2EACDA;
     }
 }
 
-header {
-    background: url('/img/211.jpg') no-repeat center center /cover;
-    height: 40vh;
 
-    h2 {
-        color: white;
-        font-size: 42px;
-        margin-top: 150px;
-    }
 
-    position: relative;
-}
 
-header::before {
-    content: '';
-    background: rgba(0, 0, 0, 0.422);
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    z-index: 1;
-}
-
-header .container {
-    z-index: 2;
-    position: relative;
-}
 </style>

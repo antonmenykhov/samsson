@@ -73,10 +73,10 @@
             <h2 v-if="lang=='rus'">Разделы инженерных систем</h2>
             <h2 v-if="lang=='eng'">ENGINEERING SYSTEMS</h2>
             <div class="razdel-holder">
-                <div class="razdel" v-for="razdel,i in razdels[lang]" :key="i">
-                    <h3>{{razdel.title}}</h3>
-                    <p>{{razdel.description}}</p>
-                    <el-button>Подробнее</el-button>
+                <div class="razdel" v-for="razdel,i in services.razdels" :key="i">
+                    <h3>{{razdel.name[lang]}}</h3>
+                    <p>{{razdel.desc[lang]}}</p>
+
                 </div>
             </div>
         </div>
@@ -86,8 +86,10 @@
             <div class="number-wrapper" v-for="number,i in numbers" :key="i">
                 <div class="number-name">{{number.name[lang]}}</div>
                 <div v-if="i==0" class="number">{{animatedNumber1}} <span>{{number.ed[lang]}}</span></div>
+                <div v-if="i==0" class="number">{{animatedNumber4}} <span>{{number.ed[lang]}} / {{number.deltaper[lang]}}</span></div>
                 <div v-if="i==1" class="number">{{animatedNumber2}} <span>{{number.ed[lang]}}</span></div>
-                <div v-if="i==2" class="number">{{animatedNumber3}} <span>{{number.ed[lang]}}</span></div>
+                <div v-if="i==1" class="number">{{animatedNumber5}} <span>{{number.ed[lang]}} / {{number.deltaper[lang]}}</span></div>
+                <div style="flex: 1" v-if="i==2" class="number">{{animatedNumber3}} <span>{{number.ed[lang]}}</span></div>
             </div>
         </div>
     </section>
@@ -151,6 +153,12 @@ export default {
         },
         num3: function (newValue) {
             gsap.to(this.$data, { duration: 2, tweenedNumber3: newValue });
+        },
+        num4: function (newValue) {
+            gsap.to(this.$data, { duration: 3, tweenedNumber4: newValue });
+        },
+        num5: function (newValue) {
+            gsap.to(this.$data, { duration: 3, tweenedNumber5: newValue });
         }
     },
     name: 'Home',
@@ -161,61 +169,15 @@ export default {
             num1: 0,
             num2: 0,
             num3: 0,
+            num4: 80000,
+            num5: 500,
+            num6: 0,
             tweenedNumber1: 0,
             tweenedNumber2: 0,
             tweenedNumber3: 0,
-            razdels: {
-                eng: [{
-                        title: 'HVAC (HEATING, VENTILATION AIR CONDITIONING)',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
-                    },
-                    {
-                        title: 'TM (THERMAL MECHANICS)',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
-                    },
-                    {
-                        title: 'WS&S (WATER SUPPLY AND SEWERAGE)',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
-                    },
-                    {
-                        title: 'PS (POWER SUPPLY)',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
-                    },
-                    {
-                        title: 'EL (ELECTRIC LIGHTING)',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
-                    },
-                    {
-                        title: 'CN (COMMUNICATION NETWORK)',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
-                    },
-                ],
-                rus: [{
-                        title: 'ОВ (ОТОПЛЕНИЕ И ВЕНТИЛЯЦИЯ)',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
-                    },
-                    {
-                        title: 'ТМ (ТЕПЛОМЕХАНИКА',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
-                    },
-                    {
-                        title: 'ВК (ВОДОСНАБЖЕНИЕ И КАНАЛИЗАЦИЯ)',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
-                    },
-                    {
-                        title: 'ЭМ (ЭЛЕКТРОСНАБЖЕНИЕ)',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
-                    },
-                    {
-                        title: 'ЭО (ЭЛЕКТРООСВЕЩЕНИЕ)',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
-                    },
-                    {
-                        title: 'СС (СЕТИ СВЯЗИ)',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut vehicula felis, eget vulputate libero. In mollis magna in feugiat mollis. Nam a imperdiet nisi. Nulla viverra lectus mauris. Aenean tempor eleifend sapien non elementum. Nullam iaculis massa at justo venenatis venenatis. Etiam lobortis augue pharetra lectus pulvinar, ac convallis orci lacinia',
-                    },
-                ]
-            },
+            tweenedNumber4: 80000,
+            tweenedNumber5: 500,
+            tweenedNumber6: 0
 
         }
     },
@@ -227,16 +189,21 @@ export default {
             if (rect.top - window.innerHeight < 100) {
                 window.removeEventListener('scroll', this.getNums)
                 for (let i = 0; i < this.numbers.length; i++) {
-                    let date = new Date(this.numbers[i].date);
-                    let currentDate = new Date();
-                    let dateS = date.getTime();
-                    let currentDateS = currentDate.getTime();
-                    let hours = Math.ceil((currentDateS - dateS) / 3600000);
-                    this.num[i] = this.numbers[i].start * 1 + hours * this.numbers[i].delta;
+                    //   let date = new Date(this.numbers[i].date);
+                    //   let currentDate = new Date();
+                    //   let dateS = date.getTime();
+                    //   let currentDateS = currentDate.getTime();
+                    //   let hours = Math.ceil((currentDateS - dateS) / 3600000);
+                    this.num[i] = this.numbers[i].start * 1 //+ hours * this.numbers[i].delta;
+                    this.num[i+3] = this.numbers[i].delta;
                 }
                 this.num1 = this.num[0]
                 this.num2 = this.num[1]
                 this.num3 = this.num[2]
+                
+                this.num4 = this.num[3]
+                this.num5 = this.num[4]
+                this.num6 = this.num[5]
 
             }
         }
@@ -265,6 +232,12 @@ export default {
         },
         animatedNumber3: function () {
             return this.tweenedNumber3.toFixed(0);
+        },
+        animatedNumber4: function () {
+            return this.tweenedNumber4.toFixed(0);
+        },
+        animatedNumber5: function () {
+            return this.tweenedNumber5.toFixed(0);
         },
         about: function () {
             this.getNums
@@ -305,6 +278,9 @@ export default {
         },
         contacts: function () {
             return this.$store.state.contacts
+        },
+        services: function () {
+            return this.$store.state.services
         }
 
     }
@@ -318,13 +294,15 @@ $light: #2EACDA;
 .numbers {
     background: #F6F7F9;
     display: flex;
-    
+
     padding: 30px;
-    .container{
+
+    .container {
         width: 100%;
         justify-content: center;
         align-items: stretch;
     }
+
     .number-wrapper {
         display: flex;
         flex-direction: column;
@@ -334,13 +312,15 @@ $light: #2EACDA;
         margin: 10px;
         ;
     }
-    .number-name{
+
+    .number-name {
         text-align: center;
         font-size: 20px;
         color: #232323;
-        
+
     }
-    .number{
+
+    .number {
         color: $dark;
         font-size: 30px;
         margin-top: 20px;
@@ -479,6 +459,7 @@ $light: #2EACDA;
         margin: 15px;
         padding: 45px 30px 45px 30px;
         transition: all .2s ease-in-out;
+        will-change: auto;
 
         p {
             color: #616161;
@@ -507,6 +488,7 @@ $light: #2EACDA;
             border-radius: 30px 30px 30px 30px;
             padding: 12px 35px 12px 35px;
             transition: all .2s ease-in-out;
+            will-change: auto;
         }
 
         .el-button:hover {
@@ -557,8 +539,9 @@ $light: #2EACDA;
     height: 100px;
     filter: grayscale(100);
     transition: all .2s;
+    will-change: auto;
     margin: 5px;
-    transition: all .2s;
+
 }
 
 .partner:hover {
@@ -646,6 +629,7 @@ $light: #2EACDA;
             z-index: 5;
             margin-right: 30px;
             transition: all .2s;
+            will-change: auto;
         }
 
         .number::before {
@@ -659,6 +643,7 @@ $light: #2EACDA;
             left: -5px;
             top: -5px;
             transition: all .2s ease-in-out;
+            will-change: auto;
 
         }
 
@@ -673,6 +658,7 @@ $light: #2EACDA;
             left: -10px;
             top: -10px;
             transition: all .2s ease-in-out;
+            will-change: auto;
         }
     }
 }
@@ -743,6 +729,7 @@ h4 {
     margin: 20px 0;
     position: relative;
     border-radius: 30px;
+    will-change: auto;
 
 }
 
@@ -755,6 +742,7 @@ h4 {
     width: 10px;
     border-radius: 50%;
     background: $dark;
+    will-change: auto;
     animation: goBack 5s infinite;
 }
 
@@ -787,7 +775,7 @@ h4 {
 
 .main-header::after {
     content: '';
-    background: url('/img/main.png') no-repeat center center / cover;
+    background: url('/img/main1.png') no-repeat center center / cover;
     position: absolute;
     bottom: 0;
     right: 0;
@@ -917,6 +905,7 @@ h4 {
     margin: 15px;
     height: 230px;
     transition: all .3s ease-in-out;
+    will-change: auto;
 
     .icon {
         display: flex;
@@ -935,6 +924,7 @@ h4 {
         width: 70px;
         height: 70px;
         transition: all .2s ease-in-out;
+        will-change: auto;
         color: $dark;
     }
 

@@ -1,8 +1,9 @@
 <template>
 <div class="portfolio">
     <header>
+        <iframe class="frame-top" src="/main.html" scrolling="no" frameborder="0"></iframe>
         <div class="container">
-            
+
             <h2 v-if="lang=='rus'">Портфолио</h2>
             <h2 v-if="lang=='eng'">Portfolio</h2>
         </div>
@@ -39,15 +40,13 @@
                 <h3>{{dc.name}}</h3>
                 <p v-html="dc.text"></p>
             </div>
-            <div class="gallery">
-                <h3  v-if="dc.gallery[0]">Галерея</h3>
-                <el-carousel v-if="dc.gallery[0]" arrow="always" :autoplay="false" indicator-position="none" height="600px" ref="top" v-touch:swipe="swipe">
-                    <el-carousel-item :style="'background: url(\''+item.img+'\') no-repeat center top / cover'" v-for="item,i in dc.gallery" :key="i">
-                        <div class="sign">{{item.sign[lang]}}</div>
-                    </el-carousel-item>
-
-                </el-carousel>
-
+            <div  class="gallery">
+                <h3 v-if="dc.gallery[0]">Галерея</h3>
+                <div class="image-gallery">
+                    <div @click="openLightBox(i)" class="gallery-item" v-for="item,i in dc.gallery" :key="i" :style="'background: url(\''+item.thumb+'\') no-repeat center center / cover'"></div>
+                </div>
+                <LightBox v-touch="swipe"  ref="lightbox" :show-caption="true" :show-light-box="false" :media="dc.gallery"></LightBox>
+                
             </div>
         </div>
     </el-dialog>
@@ -55,34 +54,61 @@
 </template>
 
 <script>
+import LightBox from '../components/LightBox.vue'
+require('vue-it-bigger/dist/vue-it-bigger.min.css')
 export default {
-
+    components: {
+        LightBox
+    },
     methods: {
-        swipe(direct) {
-            const top = this.$refs['top'];
-            if (direct == 'right') {
-                top.prev()
-            }
-            if (direct == 'left') {
-                top.next()
-            }
-        },
-
+        openLightBox(index) {
+      this.$refs.lightbox.showImage(index)
+    },
         
+
         openNew(i) {
             const loading = this.$loading({
-                
+
                 text: 'Загрузка',
                 background: 'rgba(255, 255, 255, 0.7)'
             });
             this.dc.img = this.portfolio[i - 1].acf.img
             this.dc.name = this.portfolio[i - 1].acf.name[this.lang]
             this.dc.text = this.portfolio[i - 1].acf.description[this.lang]
-            this.dc.gallery = this.portfolio[i - 1].acf.gallery
+            
+            this.getGallery(i)
             setTimeout(() => {
                 loading.close();
                 this.dialog = true;
             }, 500);
+        },
+        getGallery(i) {
+            
+           
+             this.dc.gallery=[];
+
+            for (let j = 0; j < this.portfolio[i - 1].acf.gallery.length; j++) {
+                let item = this.portfolio[i - 1].acf.gallery[j];
+                
+                let arrItem = {}
+                if (item.type == 'image') {
+                    arrItem.type = item.type;
+                    arrItem.thumb = item.img;
+                    arrItem.src = item.img;
+                    arrItem.caption = item.sign[this.lang]
+                }
+                if (item.type == 'youtube') {
+                    arrItem.type = item.type;
+                    arrItem.caption = item.sign[this.lang]
+                    arrItem.id = item.video.split('=')[1];
+                    arrItem.thumb = 'https://img.youtube.com/vi/' + arrItem.id + '/hqdefault.jpg';
+                }
+                this.dc.gallery.push(arrItem);
+                
+            }
+
+            
+            
         },
         load() {
             this.loading = true
@@ -109,10 +135,12 @@ export default {
         }
     },
     computed: {
-         lang: function () {
+       
+
+        lang: function () {
             return this.$store.state.lang
         },
-        
+
         portfolio: function () {
             return this.$store.state.portfolio
         },
@@ -130,14 +158,36 @@ export default {
                 gallery: [],
             },
             count: 3,
-            
+
         }
     },
 }
 </script>
 
 <style lang="scss">
+.vib-footer{
+    font-size: 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.822)
+}
+
 .portfolio {
+    .image-gallery{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        .gallery-item{
+            height: 200px;
+            width: 200px;
+            margin: 10px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .gallery-item:hover{
+            transform: scale(1.1);
+        }
+    }
     .work-card {
         display: flex;
         flex-wrap: wrap;
@@ -148,7 +198,7 @@ export default {
         .gallery {
             flex: 1 1 600px;
             height: auto;
-            
+
             h3 {
                 margin: 10px 0;
                 padding: 10px;
@@ -156,12 +206,13 @@ export default {
                 text-align: center;
                 word-break: keep-all;
                 font-size: 24px;
-               
+
                 background: #126B8F;
             }
-            .el-carousel__item{
-                
-                .sign{
+
+            .el-carousel__item {
+
+                .sign {
                     position: absolute;
                     bottom: 10px;
                     left: 10px;
@@ -291,33 +342,6 @@ export default {
             background: #126B8F;
             color: white;
         }
-    }
-
-    header {
-        background: url('/img/211.jpg') no-repeat center center /cover;
-        height: 40vh;
-
-        h2 {
-            color: white;
-            font-size: 42px;
-            margin-top: 150px;
-        }
-
-        position: relative;
-    }
-
-    header::before {
-        content: '';
-        background: rgba(0, 0, 0, 0.422);
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        z-index: 1;
-    }
-
-    header .container {
-        z-index: 2;
-        position: relative;
     }
 
     .section {
