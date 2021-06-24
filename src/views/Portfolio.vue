@@ -16,7 +16,7 @@
             <h2 v-if="lang=='eng'">Our projects</h2>
             <div class="progressbar"></div>
             <ul class="infinite-list" v-infinite-scroll="load" style="overflow:auto">
-                <li @click="openNew(i)" v-for="i in count" class="infinite-list-item" :key="i">
+                <li @click="openNew(i)" v-for="i in count+1" class="infinite-list-item" :key="i">
                     <div class="work-wrapper" :style="'background: url(\''+portfolio[i-1].acf.img+'\') no-repeat center top / cover'">
                     </div>
                     <div class="text">
@@ -31,6 +31,20 @@
             <p class="scroll-msg" v-if="loading">Загружаем проекты...</p>
         </div>
     </div>
+    <div class="section reviews">
+        <div class="container">
+            <h4 v-if="lang=='rus'">Отзывы</h4>
+            <h4 v-if="lang=='eng'">Reviews</h4>
+            <h2 v-if="lang=='rus'">Отзывы наших партнеров</h2>
+            <h2 v-if="lang=='eng'">Feedback from our partners</h2>
+            <p class="sectDescription">{{reviews.text[lang]}}</p>
+
+            <div class="image-gallery">
+                <div @click="openLightBox2(i)" class="gallery-item" v-for="item,i in reviews.gallery" :key="i" :style="'background: url(\''+item+'\') no-repeat center center / cover'"></div>
+            </div>
+            <LightBox ref="lightbox2" :show-caption="true" :show-light-box="false" :media="revArr"></LightBox>
+        </div>
+    </div>
     <el-dialog width="1200px" :visible.sync="dialog">
         <div class="work-card">
             <div class="image" :style="'background: url(\''+dc.img+'\') no-repeat center top / cover'">
@@ -39,14 +53,19 @@
             <div class="text">
                 <h3>{{dc.name}}</h3>
                 <p v-html="dc.text"></p>
+                <div class="tools">
+                    <div v-for="tool,i in dc.tools" :key="i" class="tool" :style="'background: url(\''+tool+'\') no-repeat center center / contain'"></div>
+                </div>
             </div>
-            <div  class="gallery">
+            <div class="gallery">
                 <h3 v-if="dc.gallery[0]">Галерея</h3>
                 <div class="image-gallery">
-                    <div @click="openLightBox(i)" class="gallery-item" v-for="item,i in dc.gallery" :key="i" :style="'background: url(\''+item.thumb+'\') no-repeat center center / cover'"></div>
+                    <div @click="openLightBox(i)" class="gallery-item" v-for="item,i in dc.gallery" :key="i" :style="'background: url(\''+item.thumb+'\') no-repeat center center / cover'">
+                   <p> {{item.caption}}</p>
+                    </div>
                 </div>
-                <LightBox v-touch="swipe"  ref="lightbox" :show-caption="true" :show-light-box="false" :media="dc.gallery"></LightBox>
-                
+                <LightBox ref="lightbox" :show-caption="true" :show-light-box="false" :media="dc.gallery"></LightBox>
+
             </div>
         </div>
     </el-dialog>
@@ -55,16 +74,20 @@
 
 <script>
 import LightBox from '../components/LightBox.vue'
-require('vue-it-bigger/dist/vue-it-bigger.min.css')
+require('../components/style.css')
 export default {
     components: {
         LightBox
     },
+
     methods: {
         openLightBox(index) {
-      this.$refs.lightbox.showImage(index)
-    },
-        
+            this.$refs.lightbox.showImage(index)
+        },
+        openLightBox2(index) {
+            this.getRewies()
+            this.$refs.lightbox2.showImage(index)
+        },
 
         openNew(i) {
             const loading = this.$loading({
@@ -75,21 +98,32 @@ export default {
             this.dc.img = this.portfolio[i - 1].acf.img
             this.dc.name = this.portfolio[i - 1].acf.name[this.lang]
             this.dc.text = this.portfolio[i - 1].acf.description[this.lang]
-            
+            this.dc.tools = this.portfolio[i - 1].acf.tools
             this.getGallery(i)
             setTimeout(() => {
                 loading.close();
                 this.dialog = true;
             }, 500);
         },
+        getRewies() {
+            this.revArr = [];
+            for (let i = 0; i < this.reviews.gallery.length; i++) {
+                this.revArr.push({
+                    type: 'image',
+                    thumb: this.reviews.gallery[i],
+                    src: this.reviews.gallery[i],
+                    caption: ''
+                })
+
+            }
+        },
         getGallery(i) {
-            
-           
-             this.dc.gallery=[];
+
+            this.dc.gallery = [];
 
             for (let j = 0; j < this.portfolio[i - 1].acf.gallery.length; j++) {
                 let item = this.portfolio[i - 1].acf.gallery[j];
-                
+
                 let arrItem = {}
                 if (item.type == 'image') {
                     arrItem.type = item.type;
@@ -104,11 +138,9 @@ export default {
                     arrItem.thumb = 'https://img.youtube.com/vi/' + arrItem.id + '/hqdefault.jpg';
                 }
                 this.dc.gallery.push(arrItem);
-                
+
             }
 
-            
-            
         },
         load() {
             this.loading = true
@@ -135,7 +167,6 @@ export default {
         }
     },
     computed: {
-       
 
         lang: function () {
             return this.$store.state.lang
@@ -144,11 +175,14 @@ export default {
         portfolio: function () {
             return this.$store.state.portfolio
         },
+        reviews: function () {
+            return this.$store.state.reviews
+        }
 
     },
     data() {
         return {
-
+            revArr: [],
             loading: false,
             dialog: false,
             dc: {
@@ -156,6 +190,7 @@ export default {
                 name: null,
                 text: null,
                 gallery: [],
+                tools: [],
             },
             count: 3,
 
@@ -165,34 +200,57 @@ export default {
 </script>
 
 <style lang="scss">
-.vib-footer{
-    font-size: 20px;
+.vib-footer {
+
     text-align: center;
     background: rgba(0, 0, 0, 0.822)
 }
 
 .portfolio {
-    .image-gallery{
-        width: 100%;
+    .image-gallery {
+        
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
-        .gallery-item{
+       
+
+
+        .gallery-item {
             height: 200px;
             width: 200px;
             margin: 10px;
             cursor: pointer;
             transition: all .2s;
+            will-change: auto;
+            display: flex;
+            align-items: flex-end;
+            justify-content: stretch;
+            p{
+                text-align: center;
+                background: rgba(0, 0, 0, 0.726);
+                color: white;
+                margin: 0;
+                padding:4px 2px;
+                word-break: keep-all;
+                width: 100%;
+                height: 60px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+            }
         }
-        .gallery-item:hover{
+
+        .gallery-item:hover {
             transform: scale(1.1);
         }
     }
+
     .work-card {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        align-items: center;
+        align-items: stretch;
         width: 100%;
 
         .gallery {
@@ -272,6 +330,7 @@ export default {
         list-style: none;
         cursor: pointer;
         overflow: hidden;
+        max-width: 350px;
 
     }
 
@@ -280,6 +339,7 @@ export default {
         height: 100%;
         position: absolute;
         transition: all .3s;
+        will-change: auto;
     }
 
     .infinite-list-item:hover {
@@ -304,7 +364,7 @@ export default {
         right: 20px;
         bottom: 35px;
         left: 20px;
-
+will-change: auto;
         background: #126B8F;
         margin: auto;
         text-align: left;
@@ -336,6 +396,7 @@ export default {
             transform: translateY(30px);
             opacity: 0;
             transition: 0.3s;
+            will-change: auto;
         }
 
         .el-button:hover {
@@ -371,6 +432,94 @@ export default {
             letter-spacing: -1px;
             color: #232323;
         }
+    }
+}
+
+.tools {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tool {
+    height: 50px;
+    flex: 1 1 100px;
+    margin: 10px;
+}
+
+.reviews {
+    .image-gallery {
+        .gallery-item {
+            height: 500px;
+            fleX: 1 1 300px;
+            margin: 30px;
+            border: 1px solid rgba(128, 128, 128, 0.541)
+        }
+    }
+}
+@media (max-width: 1210px){
+    .el-dialog{
+        width: 100vw!important;
+    }
+}
+
+@media (max-width: 768px) {
+    .portfolio .work-card .gallery h3{
+        margin: 20px 10px;
+    }
+    .portfolio header h2{
+        font-size: 40px!important;
+    }
+    .reviews .image-gallery .gallery-item{
+        height: 350px;
+    }
+    .infinite-list {
+        padding-left: 0;
+    }
+
+    .el-dialog__wrapper {
+        .el-dialog {
+            max-width: 100vw !important;
+            width: 100vw !important;
+        }
+    }
+
+    .portfolio .work-card .text {
+        flex: unset;
+        border-radius: 0 0 5px 5px;
+    }
+
+    .portfolio {
+        .work-card {
+            flex-direction: column;
+            align-items: center !important;
+
+            .image {
+                flex: unset;
+                height: 300px;
+                width: 100%;
+                border-radius: 5px 5px 0 0;
+            }
+
+            .text {
+                width: 100%;
+                margin: 0;
+                h3{
+                    text-align: center;
+                }
+            }
+
+            .gallery {
+
+                flex: 1 1 200px !important;
+            }
+            .image-gallery{
+                .gallery-item{
+                    height: 130px;
+                    flex: 1 1 130px;
+                }
+            }
+        }
+
     }
 }
 </style>

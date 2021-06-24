@@ -6,6 +6,17 @@
             <div class="logo-text">{{$store.state.name[lang].name}}</div>
         </div>
     </div>
+    <el-drawer size="300px" :visible.sync="burger">
+        <div class="burger-menu">
+            <div @click="goRoute(item.link)" class="menu-item" v-for="item,i in menu[lang]" :key="i">
+                {{item.name}}
+            </div>
+            <div @click="changeLang" class="lang-switcher">
+                <el-switch v-model="langSwitch" inactive-text="RUS" active-text="ENG" active-value="eng" inactive-value="rus" active-color="#2EACDA" inactive-color="#2EACDA">
+                </el-switch>
+            </div>
+        </div>
+    </el-drawer>
     <div id="menu" class="top-line-c">
         <div class="top-line">
 
@@ -13,6 +24,7 @@
                 <div class="logo-img"></div>
                 <div class="logo-text">{{$store.state.name[lang].name}}</div>
             </div>
+            <div @click="burger=true" class="burger-button"></div>
             <div class="menu">
                 <div @click="goRoute(item.link)" class="menu-item" v-for="item,i in menu[lang]" :key="i">
                     {{item.name}}
@@ -35,17 +47,23 @@
                 </div>
             </div>
             <div class="footer-contacts">
-                <div>
-                    <h5 v-if="lang=='rus'">Почта: {{contacts.mail}}</h5>
-                    <h5 v-if="lang=='eng'">Mail: {{contacts.mail}}</h5>
+                <div class="line">
+                    <h5 v-if="lang=='rus'">Почта: </h5>
+                    <h5 v-if="lang=='rus'">{{contacts.mail}}</h5>
+                    <h5 v-if="lang=='eng'">Mail: </h5>
+                    <h5 v-if="lang=='eng'">{{contacts.mail}}</h5>
                 </div>
-                <div>
-                    <h5 v-if="lang=='rus'">Телефон: {{contacts.phone}}</h5>
-                    <h5 v-if="lang=='eng'">Phone: {{contacts.phone}}</h5>
+                <div class="line">
+                    <h5 v-if="lang=='rus'">Телефон: </h5>
+                    <h5 v-if="lang=='rus'">{{contacts.phone}}</h5>
+                    <h5 v-if="lang=='eng'">Phone: </h5>
+                    <h5 v-if="lang=='eng'">{{contacts.phone}}</h5>
                 </div>
-                <div>
-                    <h5 v-if="lang=='rus'">Адрес: {{contacts.adres[lang]}}</h5>
-                    <h5 v-if="lang=='eng'">Adress: {{contacts.adres[lang]}}</h5>
+                <div class="line">
+                    <h5 v-if="lang=='rus'">Адрес: </h5>
+                    <h5 v-if="lang=='rus'">{{contacts.adres[lang]}}</h5>
+                    <h5 v-if="lang=='eng'">Adress: </h5>
+                    <h5 v-if="lang=='eng'">{{contacts.adres[lang]}}</h5>
                 </div>
             </div>
             <div class="footer-menu">
@@ -65,6 +83,7 @@ import constatns from './constants'
 export default {
     data() {
         return {
+            burger: false,
             langSwitch: 'RUS',
             loading: false,
             menu: {
@@ -116,12 +135,12 @@ export default {
     mounted() {
         let coockie = document.cookie.split(';');
         let index = coockie.indexOf("lang=eng") + coockie.indexOf("lang=rus");
-        if (index >= -1){
-            let lang = coockie[index+1].slice(5)
+        if (index >= -1) {
+            let lang = coockie[index + 1].slice(5)
             this.$store.commit('setLang', lang);
-            this.langSwitch=lang
+            this.langSwitch = lang
         }
-        
+
         window.scrollTo(0, 0)
         this.loading = true;
         document.body.style.overflowY = 'scroll';
@@ -170,19 +189,19 @@ export default {
 
             });
             setTimeout(() => {
-                document.cookie = "lang="+this.langSwitch+"; max-age=2592000";
+                document.cookie = "lang=" + this.langSwitch + "; max-age=2592000";
                 this.$store.commit('setLang', this.langSwitch);
                 loading.close();
             }, 500);
 
         },
         goRoute(link) {
-
+            this.burger = false
             const loading = this.$loading({
 
             });
             setTimeout(() => {
-                
+
                 window.scrollTo(0, 0)
                 this.$router.push({ 'path': link })
                 loading.close();
@@ -205,6 +224,9 @@ export default {
             })
             axios.get(constatns.services).then(response => {
                 this.$store.commit('setServices', response.data.acf)
+            })
+            axios.get(constatns.reviews).then(response => {
+                this.$store.commit('setReviews', response.data.acf)
             })
         }
     },
@@ -287,6 +309,7 @@ header {
     animation: slideup 1s forwards;
     animation-delay: 3s;
     will-change: auto;
+
     .logo-img {
         background: url('/img/logo.png') no-repeat center center / cover;
         height: 300px;
@@ -390,7 +413,9 @@ footer {
     background: $dark;
     height: 150px;
 }
-
+.line{
+    display: flex;
+}
 .el-loading-mask {
     background: white !important;
 }
@@ -430,4 +455,147 @@ body {
     -moz-osx-font-smoothing: grayscale;
 
 }
+
+.burger-button {
+    display: none;
+}
+
+@media (max-width: 1000px) {
+    .top-line-c {
+        .top-line {
+            .menu {
+                display: none;
+            }
+        }
+    }
+
+    .burger-button {
+        display: flex;
+        width: 25px;
+        border-bottom: 5px solid white;
+        position: relative;
+        margin-right: 10px;
+    }
+
+    .burger-button::before {
+        position: absolute;
+        content: '';
+        width: 100%;
+        border-bottom: 5px solid white;
+        left: 0;
+        top: -10px
+    }
+
+    .burger-button::after {
+        position: absolute;
+        content: '';
+        width: 100%;
+        border-bottom: 5px solid white;
+        left: 0;
+        bottom: -15px
+    }
+
+    footer {
+        height: unset;
+        padding: 20px;
+
+        .footer-contacts:first-child {
+            display: none;
+        }
+    }
+
+}
+
+@media (max-width: 768px) {
+    .line{
+    display: flex;
+    h5:first-child{
+        width: 70px!important;
+        min-width: 70px;
+
+    }
+   
+}
+    .loading {
+        .logo-img {
+            height: 150px;
+            width: 150px;
+        }
+
+        .logo-text {
+            font-size: 50px;
+        }
+    }
+
+    footer .footer-menu {
+        display: none;
+    }
+
+    footer {
+        .container {
+            flex-direction: column;
+        }
+
+        .footer-contacts {
+            flex: unset;
+
+            h5 {
+                height: unset;
+            }
+        }
+    }
+}
+
+@media (max-width: 400px) {
+    footer{
+        position: relative;
+        z-index: 9999;
+    }
+    .top-line-c {
+        .top-line {
+            margin: 0;
+
+            .logo {
+                .logo-text {
+                    display: none;
+                }
+
+                .logo-img {
+                    height: 50px;
+                    width: 50px;
+                }
+            }
+        }
+    }
+}
+
+.el-drawer__header {
+    height: unset;
+}
+
+.burger-menu {
+    display: flex;
+    flex-direction: column;
+
+    padding: 20px;
+    padding-bottom: 50px;
+    height: 100%;
+
+    .menu-item {
+        font-size: 20px;
+        line-height: 30px;
+    }
+
+    .lang-switcher {
+        margin-top: 30px;
+    }
+}
+
+.captionCustom {
+    font-size: 20px !important;
+    width: 100%;
+    text-align: center;
+    word-break: keep-all;
+}
+
 </style>

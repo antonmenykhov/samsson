@@ -72,10 +72,12 @@
         <div class="container">
             <h2 v-if="lang=='rus'">Разделы инженерных систем</h2>
             <h2 v-if="lang=='eng'">ENGINEERING SYSTEMS</h2>
+            
+            <p class="sectDescription">{{services.signIS[lang]}}</p>
             <div class="razdel-holder">
                 <div class="razdel" v-for="razdel,i in services.razdels" :key="i">
                     <h3>{{razdel.name[lang]}}</h3>
-                    <p>{{razdel.desc[lang]}}</p>
+                    
 
                 </div>
             </div>
@@ -85,11 +87,11 @@
         <div class="container">
             <div class="number-wrapper" v-for="number,i in numbers" :key="i">
                 <div class="number-name">{{number.name[lang]}}</div>
-                <div v-if="i==0" class="number">{{animatedNumber1}} <span>{{number.ed[lang]}}</span></div>
+                <div v-if="i==0" class="number big">{{animatedNumber1}} <span>{{number.ed[lang]}}</span></div>
                 <div v-if="i==0" class="number">{{animatedNumber4}} <span>{{number.ed[lang]}} / {{number.deltaper[lang]}}</span></div>
-                <div v-if="i==1" class="number">{{animatedNumber2}} <span>{{number.ed[lang]}}</span></div>
+                <div v-if="i==1" class="number big">{{animatedNumber2}} <span>{{number.ed[lang]}}</span></div>
                 <div v-if="i==1" class="number">{{animatedNumber5}} <span>{{number.ed[lang]}} / {{number.deltaper[lang]}}</span></div>
-                <div style="flex: 1" v-if="i==2" class="number">{{animatedNumber3}} <span>{{number.ed[lang]}}</span></div>
+                <div style="flex: 1" v-if="i==2" class="number big">{{animatedNumber3}} <span>{{number.ed[lang]}}</span></div>
             </div>
         </div>
     </section>
@@ -450,7 +452,8 @@ $light: #2EACDA;
 
     .razdel {
         flex: 1 1 300px;
-
+        justify-content: center;
+        align-items: center;
         background: #ffffff;
         box-shadow: 0 0 5px rgb(0 0 0 / 7%);
         text-align: left;
@@ -477,6 +480,8 @@ $light: #2EACDA;
             color: #232323;
             height: 30px;
             font-size: 18px;
+            width: 100%;
+            text-align: center;
         }
 
         .el-button {
@@ -943,10 +948,124 @@ h4 {
         animation: spin 1s infinite;
     }
 }
-
+.sectDescription{
+    max-width: 800px;
+    text-align: center;
+    color: #616161;
+    font-size: 16px;
+}
+.big{
+    font-size: 40px!important;
+}
 @keyframes spin {
     100% {
         transform: rotate(360deg);
+    }
+}
+@media (max-width: 1200px){
+    .container, .top-line{
+        padding: 0 20px;
+    }
+    .targets{
+        .container{
+            align-items: stretch;
+        }
+    }
+    .target-wrapper{
+        height: unset;
+        
+    }
+    .about{
+        height: unset;
+        padding: 20px 0;
+    }
+    .main-line h1{
+        font-size: 60px;
+    }
+    .main-line p{
+        font-size: 18px;
+    }
+    h2{
+        font-size: 30px!important;
+    }
+}
+@media (max-width: 1000px){
+    .about-holder .image{
+        height: 300px;
+    }
+    .methods{
+        .container{
+            flex-direction: column;
+            .left{
+                height: unset;
+                flex: unset;
+                background: none;
+                h2{
+                    color: $dark;
+                }
+            }
+            .left::after{
+                background: none;
+            }
+        }
+    }
+    .numbers .number-name{
+        font-size: 18px;
+    }
+    .big{
+        font-size: 30px!important;
+    }
+    .numbers .number{
+        font-size: 20px;
+        margin-top: 10px;
+    }
+    .razdels .razdel{
+        padding: 20px 12px;
+    }
+    .target-wrapper .icon{
+        display: none;
+    }
+    .target-wrapper{
+        flex: 1 1 200px;
+    }
+    .razdels .container,
+    .partners .container{
+        padding: 30px 30px;
+    }
+    .methods{
+        padding: 30px 0;
+    }
+    .partner{
+        width: 100px;
+        height: 60px;
+    }
+    .maps{
+        padding: 20px;
+    }
+    
+}   
+@media (max-width: 768px){
+    .maps{
+        display: none;
+    }
+    .targets{
+        margin-top: 0;
+        h2{
+            color: #232323;
+            
+        }
+    }
+    h2{
+        text-align: center!important;
+    }
+    .methods .method{
+        margin: 0 0;
+    }
+    .about-holder .image{
+        flex: 1 1 250px;
+    }
+    .about-holder .text{
+        align-items: center;
     }
 }
 </style>

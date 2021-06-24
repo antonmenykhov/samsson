@@ -37,6 +37,16 @@
                 </div>
                 <div class="contact-holder">
                     <span class="material-icons">
+                        schedule
+                    </span>
+                    <h5 v-if="lang=='rus'">Время работы</h5>
+                    <h5 v-if="lang=='eng'">Opening hours</h5>
+                    <p v-html="contacts.time[lang]">
+                       
+                    </p>
+                </div>
+                <div class="contact-holder">
+                    <span class="material-icons">
                         call
                     </span>
                     <h5 v-if="lang=='rus'">Телефон</h5>
@@ -136,6 +146,7 @@ $light: #2EACDA;
             border-radius: 7px;
             margin-top: 10px;
             transition: 0.3s;
+            will-change: auto;
             color: #fff;
         }
         .el-button:hover{
@@ -222,16 +233,16 @@ $light: #2EACDA;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        align-items: center;
+        align-items: stretch;
         width: 100%;
     }
 
     .contact-holder {
-        flex: 1 1 300px;
+        flex: 1 1 200px;
         margin: 20px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        
         align-items: center;
         border: 1px solid #d0e5fb;
         border-radius: 5px 5px 5px 5px;
@@ -251,6 +262,7 @@ $light: #2EACDA;
         p {
             color: rgba(86, 86, 86, .8);
             margin: 0 0 15px 0;
+            text-align: center;
         }
 
         .material-icons {
@@ -258,6 +270,23 @@ $light: #2EACDA;
             color: $dark;
 
         }
+    }
+}
+@media (max-width: 768px){
+    .contact .container{
+        padding: 0;
+    }
+    .contact .contact-holder{
+        margin: 10px 20px;
+    }
+    header h2{
+        font-size: 40px!important;
+    }
+    .contact .contact-holder h5{
+        text-align: center;
+    }
+    .el-dialog__body{
+        word-break: unset!important;
     }
 }
 

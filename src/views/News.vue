@@ -282,6 +282,7 @@ export default {
         margin: 15px;
         overflow: hidden;
         text-align: left;
+        will-change: auto;
         -webkit-transition: all 0.3s ease-in-out 0s;
         -o-transition: all 0.3s ease-in-out 0s;
         transition: all 0.3s ease-in-out 0s;
@@ -316,11 +317,34 @@ export default {
             font-size: 21px;
             color: #232323;
             transition: all .2s ease-in-out;
+            will-change: auto;
         }
 
         h3:hover {
             color: #126B8F;
         }
+    }
+}
+@media (max-width: 1200px){
+    .el-dialog{
+        width: 100vw!important;
+    }
+}
+@media (max-width:1100px){
+
+    .news .infinite-list-item{
+        max-width: unset;
+    }
+    .news section .container{
+        padding: 0;
+    }
+    .news .infinite-list{
+        padding-left: 0;
+    }
+}
+@media (max-width: 500px) {
+    .news .infinite-list-item .image{
+        height: 250px;
     }
 }
 </style>

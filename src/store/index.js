@@ -20,7 +20,8 @@ export default new Vuex.Store({
         name: 'SAMSON',
         dev: 'Smart ingeneering solutions'
       }
-    }
+    },
+     reviews: null,
   },
   mutations: {
     setContacts(state, it){
@@ -41,6 +42,9 @@ export default new Vuex.Store({
     setLang(state, it){
       state.lang = it
     },
+    setReviews(state, it){
+      state.reviews = it
+    }
   },
   actions: {
     setAbout ({commit}, it){

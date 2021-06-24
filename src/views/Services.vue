@@ -3,8 +3,8 @@
     <header>
         <iframe class="frame-top" src="/main.html" scrolling="no" frameborder="0"></iframe>
         <div class="container">
-        <h2 v-if="lang=='rus'">Услуги</h2>
-        <h2 v-if="lang=='eng'">Services</h2>
+            <h2 v-if="lang=='rus'">Услуги</h2>
+            <h2 v-if="lang=='eng'">Services</h2>
         </div>
     </header>
     <section class="service-holder">
@@ -13,6 +13,7 @@
             <h4 v-if="lang=='eng'">Services</h4>
             <h2 v-if="lang=='rus'">Наши компетенции</h2>
             <h2 v-if="lang=='eng'">Our competencies</h2>
+            <p class="sectDescription">{{services.signSer[lang]}}</p>
             <div class="progressbar"></div>
             <div class="services-holder">
                 <div class="service-wrapper" v-for="item,i in services.services" :key="i">
@@ -20,22 +21,24 @@
                         {{item.icon}}
                     </span>
                     <h3>{{item.name[lang]}}</h3>
-                    <p> {{item.desc[lang]}}</p>
+                    <p v-html="item.desc[lang]"> </p>
                 </div>
             </div>
         </div>
     </section>
     <section class="razdels">
+
         <div class="container">
             <h4 v-if="lang=='rus'">Системы</h4>
             <h4 v-if="lang=='eng'">Systems</h4>
             <h2 v-if="lang=='rus'">Разделы инженерных систем</h2>
             <h2 v-if="lang=='eng'">ENGINEERING SYSTEMS</h2>
+            <p class="sectDescription">{{services.signIS[lang]}}</p>
             <div class="progressbar"></div>
             <div class="razdel-holder">
                 <div class="razdel" v-for="razdel,i in services.razdels" :key="i">
                     <h3>{{razdel.name[lang]}}</h3>
-                    <p>{{razdel.desc[lang]}}</p>
+                   
 
                 </div>
             </div>
@@ -87,30 +90,35 @@ export default {
 
 <style lang="scss">
 .lics {
-  padding-bottom: 90px;
+    padding-bottom: 90px;
+
     .lics-holder {
         display: flex;
         width: 100%;
         flex-wrap: wrap;
         justify-content: center;
     }
-    .lic-desc{
-      text-align: center;
-      margin: 20px 150px;
-      font-size: 18px;
-      font-weight: 400;
-      color: #232323;
+
+    .lic-desc {
+        text-align: center;
+        margin: 20px 150px;
+        font-size: 18px;
+        font-weight: 400;
+        color: #515151;
+        max-width: 800px;
     }
-   
-    .lics-wrapper:hover{
-      transform: scale(1.1);
+
+    .lics-wrapper:hover {
+        transform: scale(1.1);
     }
+
     .lics-wrapper {
         width: 250px;
         margin: 20px;
         overflow: hidden;
         transition: all .2s;
         position: relative;
+        will-change: auto;
         border: 1px solid rgb(173, 173, 173);
         border-radius: 5px;
         padding: 10px;
@@ -118,11 +126,8 @@ export default {
         a {
             width: 200px;
             height: 300px;
-            
 
         }
-        
-        
 
         img {
             height: 100%;
@@ -140,17 +145,20 @@ export default {
     .services-holder {
         display: flex;
         flex-wrap: wrap;
+
         width: 100%;
 
         .service-wrapper {
-            flex: 1 1 200px;
+            flex: 1 1 400px;
             margin: 10px;
-            padding: 20px;
+            padding: 40px;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            background: rgba(236, 236, 236, 0.555);
+
             border-radius: 10px;
             transition: all .2s;
+            will-change: auto;
 
             h3 {
                 color: #232323;
@@ -164,7 +172,7 @@ export default {
             }
 
             .material-icons {
-                font-size: 50px;
+                font-size: 80px;
                 color: #126B8F;
                 margin-bottom: 20px;
             }
@@ -201,6 +209,19 @@ export default {
         }
     }
 
-   
+}
+
+@media (max-width: 768px) {
+    .lics .lic-desc {
+        margin: 20px 0;
+    }
+
+    .services-view .service-holder {
+        padding-top: 30px;
+    }
+    .services-view header h2{
+        font-size: 40px!important;
+    }
+
 }
 </style>

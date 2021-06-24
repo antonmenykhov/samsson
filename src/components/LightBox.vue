@@ -1,8 +1,8 @@
 <template>
-<div v-touch="swipe" @click.stop="closeLightBox">
+<div  @click.stop="closeLightBox">
     <transition mode="out-in" name="vib-container-transition" @afterEnter="enableImageTransition" @beforeLeave="disableImageTransition">
-        <div v-if="media && media.length > 0" v-show="lightBoxShown" ref="container" class="vib-container">
-            <div class="vib-content" @click.stop>
+        <div  v-if="media && media.length > 0" v-show="lightBoxShown" ref="container" class="vib-container">
+            <div  class="vib-content" @click.stop>
                 <transition mode="out-in" :name="imageTransitionName">
                     <img v-if="currentMedia.type == undefined || currentMedia.type == 'image'" :key="currentMedia.src" :src="currentMedia.src" :srcset="currentMedia.srcset || ''" class="vib-image" :alt="currentMedia.caption">
                     <div v-else-if="media[select].type == 'youtube'" class="video-background">
@@ -23,15 +23,11 @@
             </div> <!-- .vib-thumbnail-wrapper -->
 
             <div class="vib-footer vib-hideable" :class="{ 'vib-hidden': controlsHidden }" @mouseover="interfaceHovered = true" @mouseleave="interfaceHovered = false">
-                <slot name="customCaption" :currentMedia="currentMedia">
-                    <div v-show="showCaption" v-html="currentMedia.caption" />
+                <slot class="captionCustom" name="customCaption" :currentMedia="currentMedia">
+                    <div class="captionCustom" v-show="showCaption" v-html="currentMedia.caption" />
                 </slot>
 
-                <div class="vib-footer-count">
-                    <slot name="footer" :current="select + 1" :total="media.length">
-                        {{ select + 1 }} / {{ media.length }}
-                    </slot>
-                </div>
+                
             </div>
 
             <button v-if="closable" type="button" :title="closeText" class="vib-close vib-hideable" :class="{ 'vib-hidden': controlsHidden }" @mouseover="interfaceHovered = true" @mouseleave="interfaceHovered = false">
@@ -257,16 +253,7 @@ export default {
     },
 
     methods: {
-        swipe(direct) {
-            const top = this.$refs['lightbox'];
-            if (direct == 'right') {
-                top.prev()
-                alert('dsa')
-            }
-            if (direct == 'left') {
-                top.next()
-            }
-        },
+       
         onLightBoxOpen() {
             this.$emit('onOpened')
 
@@ -375,4 +362,12 @@ export default {
 </script>
 
 <style src="./style.css">
+.vib-footer{
+    display: flex!important;
+    opacity: 1!important;
+}
+.vib-hidden{
+    opacity: 1;
+}
+
 </style>
