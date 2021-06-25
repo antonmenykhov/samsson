@@ -53,7 +53,7 @@
             <div class="lic-desc">{{services.servtext[lang]}}</div>
             <div class="lics-holder">
                 <div class="lics-wrapper" v-for="lic,i in services.docs" :key="i">
-                    <a target="_blank" :href="lic.file"><img :src="lic.img" alt=""></a>
+                    <a  @click="openLightBox2(i)" target="_blank" ><img :src="lic.img" alt=""></a>
                 </div>
             </div>
         </div>
@@ -67,16 +67,57 @@
             <div class="lic-desc">{{services.certtext[lang]}}</div>
             <div class="lics-holder">
                 <div class="lics-wrapper" v-for="lic,i in services.certs" :key="i">
-                    <a target="_blank" :href="lic.file"><img :src="lic.img" alt=""></a>
+                    <a @click="openLightBox(i)" target="_blank"><img :src="lic.img" alt=""></a>
                 </div>
             </div>
         </div>
+        <Light-box ref="lightbox" :showThumbs="false" :show-caption="false" :show-light-box="false" :media="lics"></Light-box>
+        <Light-box ref="lightbox2" :showThumbs="false" :show-caption="false" :show-light-box="false" :media="docs"></Light-box>
     </section>
 </div>
 </template>
 
 <script>
+import LightBox from '../components/LightBox.vue'
+require('../components/style.css')
 export default {
+    methods: {
+         openLightBox(index) {
+             this.getLics()
+            this.$refs.lightbox.showImage(index)
+        },
+        openLightBox2(index) {
+            this.getDocs()
+            this.$refs.lightbox2.showImage(index)
+        },
+        getLics(){
+            for (let i=0; i<this.services.certs.length; i++){
+                this.lics.push({
+                    type: 'image',
+                    thumb: this.services.certs[i].img,
+                    src: this.services.certs[i].img,
+                })
+            }
+        },
+        getDocs(){
+            for (let i=0; i<this.services.docs.length; i++){
+                this.docs.push({
+                    type: 'image',
+                    thumb: this.services.docs[i].img,
+                    src: this.services.docs[i].img,
+                })
+            }
+        }
+    },
+    data() {
+        return {
+            lics: [],
+            docs: [],
+        }
+    },
+    components: {
+        LightBox
+    },
     computed: {
         lang: function () {
             return this.$store.state.lang

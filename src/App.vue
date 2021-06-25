@@ -549,7 +549,7 @@ body {
 @media (max-width: 400px) {
     footer{
         position: relative;
-        z-index: 9999;
+        z-index: 9998;
     }
     .top-line-c {
         .top-line {

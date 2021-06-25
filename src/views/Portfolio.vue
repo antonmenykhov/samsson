@@ -42,7 +42,7 @@
             <div class="image-gallery">
                 <div @click="openLightBox2(i)" class="gallery-item" v-for="item,i in reviews.gallery" :key="i" :style="'background: url(\''+item+'\') no-repeat center center / cover'"></div>
             </div>
-            <LightBox ref="lightbox2" :show-caption="true" :show-light-box="false" :media="revArr"></LightBox>
+            <LightBox ref="lightbox2"  :showThumbs="false" :show-caption="true" :show-light-box="false" :media="revArr"></LightBox>
         </div>
     </div>
     <el-dialog width="1200px" :visible.sync="dialog">
@@ -64,7 +64,7 @@
                    <p> {{item.caption}}</p>
                     </div>
                 </div>
-                <LightBox ref="lightbox" :show-caption="true" :show-light-box="false" :media="dc.gallery"></LightBox>
+                <LightBox ref="lightbox" :showThumbs="false" :show-caption="true" :show-light-box="false" :media="dc.gallery"></LightBox>
 
             </div>
         </div>
