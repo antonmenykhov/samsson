@@ -1,4 +1,4 @@
-let url = 'http://test.top-it72.ru/';
+let url = 'https://www.samsonrus.ru/';
 let contacts = url + 'wp-json/wp/v2/pages/12';
 let services = url + 'wp-json/wp/v2/pages/10';
 let about = url + 'wp-json/wp/v2/pages/7';

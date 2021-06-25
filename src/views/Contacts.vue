@@ -42,7 +42,7 @@
                     <h5 v-if="lang=='rus'">Время работы</h5>
                     <h5 v-if="lang=='eng'">Opening hours</h5>
                     <p v-html="contacts.time[lang]">
-                       
+
                     </p>
                 </div>
                 <div class="contact-holder">
@@ -78,8 +78,8 @@
                     <el-input v-model="form.meassage" v-if="lang=='eng'" type="textarea" :rows="3" placeholder="Message"></el-input>
                 </el-form-item>
                 <el-form-item class="btn">
-                    <el-button @click="send" :loading="loading" v-if="lang=='rus'">Отправить</el-button>
-                    <el-button @click="send" :loading="loading" v-if="lang=='eng'">Send</el-button>
+                    <el-button @click="send" :disabled="disabled" :loading="loading" v-if="lang=='rus'">{{btnTextRus}}</el-button>
+                    <el-button @click="send" :disabled="disabled" :loading="loading" v-if="lang=='eng'">{{btnTextEng}}</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -89,15 +89,33 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     methods: {
-        send(){
-            this.loading=true
+        send() {
+            this.loading = true;
+            let data = new FormData;
+            data.append('name', this.form.name)
+            data.append('phone', this.form.phone)
+            data.append('message', this.form.message)
+            axios.post('/mailer/mailer.php', data).then(response => {
+                console.log(response.data);
+                this.loading = false;
+                this.disabled = true;
+
+                this.btnTextRus = "Отправлено"
+
+                this.btnTextEng = "Sended"
+
+            })
         }
     },
     data() {
         return {
             loading: false,
+            btnTextRus: 'Отправить',
+            btnTextEng: 'Send',
+            disabled: false,
             form: {
                 name: '',
                 phone: '',
@@ -119,10 +137,12 @@ export default {
 <style lang="scss">
 $dark : #126B8F;
 $light: #2EACDA;
-.contacts iframe{
+
+.contacts iframe {
     width: 100%;
     height: 400px;
 }
+
 .form {
 
     padding: 50px 0;
@@ -149,7 +169,8 @@ $light: #2EACDA;
             will-change: auto;
             color: #fff;
         }
-        .el-button:hover{
+
+        .el-button:hover {
             transform: scale(1.1);
         }
     }
@@ -242,7 +263,7 @@ $light: #2EACDA;
         margin: 20px;
         display: flex;
         flex-direction: column;
-        
+
         align-items: center;
         border: 1px solid #d0e5fb;
         border-radius: 5px 5px 5px 5px;
@@ -272,25 +293,26 @@ $light: #2EACDA;
         }
     }
 }
-@media (max-width: 768px){
-    .contact .container{
+
+@media (max-width: 768px) {
+    .contact .container {
         padding: 0;
     }
-    .contact .contact-holder{
+
+    .contact .contact-holder {
         margin: 10px 20px;
     }
-    header h2{
-        font-size: 40px!important;
+
+    header h2 {
+        font-size: 40px !important;
     }
-    .contact .contact-holder h5{
+
+    .contact .contact-holder h5 {
         text-align: center;
     }
-    .el-dialog__body{
-        word-break: unset!important;
+
+    .el-dialog__body {
+        word-break: unset !important;
     }
 }
-
-
-
-
 </style>
